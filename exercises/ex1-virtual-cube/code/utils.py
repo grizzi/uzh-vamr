@@ -13,17 +13,18 @@ def rodriguez(a: np.ndarray) -> np.ndarray:
 	else:
 		raise NameError("Angle cannot be zero")
 
-	m = np.eye((3, 3))
+	m = np.eye(3, 3)
 	k = vector_to_skew(vector)
 	m += np.sin(angle) * k + (1 - np.cos(angle)) * k.dot(k)
+	return m
 
 def read_poses(file):
 	poses = []
 	with open(file, 'r') as stream:
 		for line in stream:
 			row = [float(x) for x in line.split()]
-			rotation = np.array([row[0], row[1], row[2]])
-			translation = np.array([row[2], row[3], row[4]])
+			rotation = np.array(row[:3])
+			translation = np.array(row[3:])
 			pose = np.zeros(shape=(3, 4))
 			pose[:3, :3] = rodriguez(rotation)
 			pose[:, 3] = translation
